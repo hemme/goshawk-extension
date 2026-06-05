@@ -1,0 +1,15 @@
+/* GoShawk Extension Styles */
+
+#__snapshot_overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  cursor: crosshair !important;
+  z-index: 2147483647 !important;
+}
+
+#__snapshot_selection {
+  pointer-events: none !important;
+}

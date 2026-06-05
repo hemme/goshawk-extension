@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoShawk</title>
+  <style>
+    :root {
+      --bg: #f9f7f1;
+      --fg: #1a1612;
+      --muted: #6b563d;
+      --accent: #c4956a;
+      --card: #ffffff;
+      --border: #dbcdb7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header .icon {
+      width: 48px;
+      height: 48px;
+      display: block;
+      margin: 0 auto 6px auto;
+      object-fit: contain;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .btn-capture {
+      width: 100%;
+      padding: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+    }
+
+    .btn-capture:hover {
+      background: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .btn-capture:active {
+      transform: scale(0.98);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    .shortcut-hint {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shortcut-hint span {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .status {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+      min-height: 16px;
+    }
+
+    .status a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .status a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <img src="icons/icon256.png" class="icon" alt="GoShawk">
+    <h1>GoShawk</h1>
+  </div>
+
+  <div class="content">
+    <button class="btn-capture" id="startCapture">
+      <img src="icons/icon16.png" alt="" style="width:16px;height:16px;"> Capture goban
+    </button>
+
+    <div class="divider"></div>
+
+    <div class="shortcut-hint">
+      <span>💡 Click the button, then drag to select the area to capture</span>
+    </div>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
