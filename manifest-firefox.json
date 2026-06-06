@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GoShawk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Capture Go board diagrams and convert them to SGF/HEN",
   "icons": {
     "16": "icons/icon16.png",
@@ -13,7 +13,9 @@
       "id": "goshawk-extension@hemme",
       "strict_min_version": "142.0",
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       }
     }
   },
