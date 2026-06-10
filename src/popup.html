@@ -79,6 +79,13 @@
       transform: scale(0.98);
     }
 
+    .btn-capture:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: var(--card);
+      border-color: var(--border);
+    }
+
     .divider {
       height: 1px;
       background: var(--border);
@@ -137,12 +144,13 @@
     <div class="divider"></div>
 
     <div class="shortcut-hint">
-      <span>💡 Click the button, then drag to select the area to capture</span>
+      <span id="hintText">💡 Click the button, then drag to select the area to capture</span>
     </div>
 
     <div class="status" id="status"></div>
   </div>
 
+  <script src="platform-strategies.js"></script>
   <script src="popup.js"></script>
 </body>
 
