@@ -83,6 +83,9 @@ function update_forms() {
     }
     each_key_value(param, update)
     update_title_header()
+    if (typeof updateViewerButtonState === 'function') {
+        updateViewerButtonState()
+    }
 }
 
 function read_param(elem, temporary) {

@@ -27,4 +27,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.local.get(['goshawk_options'], (result) => {
+    if (!result.goshawk_options) {
+      chrome.storage.local.set({
+        goshawk_options: {
+          rememberParams: true,
+          henViewerUrl: 'https://play.goshawk.cc/playgo/goban.html#$hen$',
+          sgfViewerUrl: 'https://play.goshawk.cc/playgo/goban.html?sgf=$sgf$'
+        }
+      });
+    }
+  });
+});
+
 

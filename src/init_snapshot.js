@@ -1,3 +1,5 @@
+let currentOptions = { rememberParams: true, henViewerUrl: 'https://play.goshawk.cc/playgo/goban.html#$hen$', sgfViewerUrl: 'https://play.goshawk.cc/playgo/goban.html?sgf=$sgf$' };
+
 window.addEventListener('DOMContentLoaded', async () => {
   const bindClick = (id, fn) => {
     const el = document.getElementById(id);
@@ -35,12 +37,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       'goshawk_options', 'goshawk_param_memory'
     ]);
 
-    const options = result.goshawk_options || { rememberParams: true, henViewerUrl: '', sgfViewerUrl: '' };
+    currentOptions = result.goshawk_options || currentOptions;
     const source = result.currentSnapshotSource || '';
     const paramMemory = result.goshawk_param_memory || {};
     const sourceKey = source ? getSourceKey(source) : 'local';
 
-    if (options.rememberParams !== false && paramMemory[sourceKey]) {
+    if (currentOptions.rememberParams !== false && paramMemory[sourceKey]) {
       const savedParams = paramMemory[sourceKey];
       const tuningKeys = typeof default_tuning_param !== 'undefined' ? Object.keys(default_tuning_param) : [];
       let changed = false;
@@ -58,7 +60,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       chrome.storage.local.remove(['currentSnapshot', 'currentSnapshotSource']);
     }
 
-    if (options.rememberParams !== false) {
+    if (currentOptions.rememberParams !== false) {
       document.querySelectorAll('.export-button').forEach(btn => {
         btn.addEventListener('click', () => {
           const tuningKeys = typeof default_tuning_param !== 'undefined' ? Object.keys(default_tuning_param) : [];
@@ -70,7 +72,16 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    setupViewerButtons(options);
+    setupViewerButtons();
+
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName === 'local' && changes.goshawk_options) {
+        currentOptions = changes.goshawk_options.newValue || { rememberParams: true, henViewerUrl: 'https://play.goshawk.cc/playgo/goban.html#$hen$', sgfViewerUrl: 'https://play.goshawk.cc/playgo/goban.html?sgf=$sgf$' };
+        if (typeof updateViewerButtonState === 'function') {
+          updateViewerButtonState();
+        }
+      }
+    });
   }
 });
 
@@ -83,39 +94,69 @@ function getSourceKey(url) {
   }
 }
 
-function setupViewerButtons(options) {
-  const container = document.getElementById('viewer_buttons');
-  const henBtn = document.getElementById('view_hen');
-  const sgfBtn = document.getElementById('view_sgf');
-  if (!container) return;
+function isViewerUrlValid(url, placeholder) {
+  if (!url) return false;
+  const trimmed = url.trim();
+  if (trimmed === '') return false;
+  if (!trimmed.includes(placeholder)) return false;
+  try {
+    new URL(trimmed.replace(placeholder, 'dummy'));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
-  const hasHen = !!(options.henViewerUrl);
-  const hasSgf = !!(options.sgfViewerUrl);
+function updateViewerButtonState() {
+  const openViewerBtn = document.getElementById('open_viewer');
+  if (!openViewerBtn) return;
 
-  if (hasHen || hasSgf) {
-    container.style.display = 'flex';
+  const activeFormat = document.querySelector('input[name="copy_format"]:checked')?.value || 'sgf';
+  let url = '';
+  let placeholder = '';
+
+  if (activeFormat === 'hen') {
+    url = currentOptions.henViewerUrl || '';
+    placeholder = '$hen$';
+  } else {
+    url = currentOptions.sgfViewerUrl || '';
+    placeholder = '$sgf$';
   }
 
-  if (henBtn && hasHen) {
-    henBtn.disabled = false;
-    henBtn.addEventListener('click', () => {
-      const sgf = typeof get_sgf === 'function' ? get_sgf() : '';
+  const isValid = isViewerUrlValid(url, placeholder);
+  openViewerBtn.disabled = !isValid;
+  openViewerBtn.title = isValid ? `Open in ${activeFormat.toUpperCase()} viewer` : `Viewer URL for ${activeFormat.toUpperCase()} is invalid or not configured`;
+}
+
+function setupViewerButtons() {
+  const openViewerBtn = document.getElementById('open_viewer');
+  if (!openViewerBtn) return;
+
+  // Initial check
+  updateViewerButtonState();
+
+  // Listen for copy format changes
+  document.querySelectorAll('input[name="copy_format"]').forEach(radio => {
+    radio.addEventListener('change', updateViewerButtonState);
+  });
+
+  // Handle click on the open viewer button
+  openViewerBtn.addEventListener('click', () => {
+    if (openViewerBtn.disabled) return;
+    const activeFormat = document.querySelector('input[name="copy_format"]:checked')?.value || 'sgf';
+    const sgf = typeof get_sgf === 'function' ? get_sgf() : '';
+
+    if (activeFormat === 'hen') {
       try {
         const hen = window.Hen ? Hen.sgf2hen(sgf) : '';
-        const url = options.henViewerUrl.replace(/\$hen\$/g, encodeURIComponent(hen));
+        const url = currentOptions.henViewerUrl.replace(/\$hen\$/g, encodeURIComponent(hen));
         window.open(url, '_blank');
       } catch (e) {
         console.error('GoShawk: failed to open HEN viewer:', e);
       }
-    });
-  }
-
-  if (sgfBtn && hasSgf) {
-    sgfBtn.disabled = false;
-    sgfBtn.addEventListener('click', () => {
-      const sgf = typeof get_sgf === 'function' ? get_sgf() : '';
-      const url = options.sgfViewerUrl.replace(/\$sgf\$/g, encodeURIComponent(sgf));
+    } else {
+      const url = currentOptions.sgfViewerUrl.replace(/\$sgf\$/g, encodeURIComponent(sgf));
       window.open(url, '_blank');
-    });
-  }
+    }
+  });
 }
