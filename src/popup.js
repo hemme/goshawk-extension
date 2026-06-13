@@ -3,6 +3,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   const status = document.getElementById('status');
   const hintText = document.getElementById('hintText');
 
+  const gearBtn = document.getElementById('gearBtn');
+  const optionsPanel = document.getElementById('optionsPanel');
+  const rememberParamsCheckbox = document.getElementById('rememberParams');
+  const henViewerUrlInput = document.getElementById('henViewerUrl');
+  const sgfViewerUrlInput = document.getElementById('sgfViewerUrl');
+
+  gearBtn.addEventListener('click', () => {
+    const isOpen = optionsPanel.classList.toggle('open');
+    gearBtn.classList.toggle('active', isOpen);
+  });
+
+  const defaultOptions = { rememberParams: true, henViewerUrl: '', sgfViewerUrl: '' };
+  const stored = await chrome.storage.local.get(['goshawk_options']);
+  const opts = stored.goshawk_options || defaultOptions;
+  rememberParamsCheckbox.checked = opts.rememberParams !== false;
+  henViewerUrlInput.value = opts.henViewerUrl || '';
+  sgfViewerUrlInput.value = opts.sgfViewerUrl || '';
+
+  const saveOptions = () => {
+    chrome.storage.local.set({
+      goshawk_options: {
+        rememberParams: rememberParamsCheckbox.checked,
+        henViewerUrl: henViewerUrlInput.value.trim(),
+        sgfViewerUrl: sgfViewerUrlInput.value.trim(),
+      }
+    });
+  };
+  rememberParamsCheckbox.addEventListener('change', saveOptions);
+  henViewerUrlInput.addEventListener('change', saveOptions);
+  sgfViewerUrlInput.addEventListener('change', saveOptions);
+
   const manifest = chrome.runtime.getManifest();
   status.textContent = `v${manifest.version} \u2013 `;
   const link = document.createElement('a');
@@ -11,10 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   link.textContent = 'GitHub';
   status.appendChild(link);
 
-  /*
-   * Try each platform strategy to detect whether the active tab is a
-   * live game with analysis disabled. The first matching strategy wins.
-   */
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab?.url?.startsWith('http')) {
@@ -25,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (disabled) {
           startBtn.disabled = true;
           startBtn.title = reason;
-          hintText.textContent = `💡 ${reason}`;
+          hintText.textContent = `\ud83d\udca1 ${reason}`;
         }
       }
     }
@@ -56,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (chrome.runtime.lastError) {
         status.textContent = "Error: " + chrome.runtime.lastError.message;
       } else {
-        status.textContent = 'Select an area on the page…';
+        status.textContent = 'Select an area on the page\u2026';
         setTimeout(() => window.close(), 800);
       }
     });

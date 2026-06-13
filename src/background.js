@@ -20,7 +20,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.action === 'processSgf') {
-    chrome.storage.local.set({ currentSnapshot: message.dataUrl }, () => {
+    const source = sender.tab?.url || '';
+    chrome.storage.local.set({ currentSnapshot: message.dataUrl, currentSnapshotSource: source }, () => {
       chrome.tabs.create({ url: chrome.runtime.getURL('sgf_from_image/sgf_from_image.html') });
     });
   }
