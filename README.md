@@ -1,6 +1,6 @@
 # GoShawk Extension
 
-**GoShawk Extension** is a browser extension for Chrome and Firefox that lets you capture Go (Weiqi/Baduk) board diagrams and convert them into SGF or HEN format - all without leaving your browser.
+**GoShawk Extension** is a browser extension for Chrome and Firefox that lets you capture Go (Weiqi/Baduk) board diagrams and convert them into SGF or HEN format or download [PIC+hen](https://play.goshawk.cc/pic-plus) files (i.e. PNG / GIF with embedded position metadata)  - all without leaving your browser.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Chrome](https://img.shields.io/badge/Chrome-supported-4285F4?logo=google-chrome&logoColor=white)
