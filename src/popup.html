@@ -292,6 +292,41 @@
       color: var(--fg);
       background: rgba(196, 149, 106, 0.05);
     }
+
+    .coffee-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      vertical-align: middle;
+      margin-left: 0px;
+    }
+
+    .coffee-link:hover {
+      transform: scale(1.2) translateY(-1px);
+      text-decoration: none !important;
+    }
+
+    .coffee-link svg {
+      display: block;
+    }
+
+    @keyframes heart-beat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.25);
+      }
+    }
+
+    .coffee-link .coffee-heart {
+      transform-origin: 12px 11px;
+    }
+
+    .coffee-link:hover .coffee-heart {
+      animation: heart-beat 0.6s ease-in-out infinite;
+    }
   </style>
 </head>
 

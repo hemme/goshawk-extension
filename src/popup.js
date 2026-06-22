@@ -8,7 +8,7 @@ if (typeof chrome === 'undefined' || !chrome.runtime || !chrome.runtime.getManif
     storage: {
       local: {
         get: async () => ({ goshawk_options: { rememberParams: true, henViewerUrl: 'https://play.goshawk.cc/playgo/goban.html#$hen$', sgfViewerUrl: 'https://play.goshawk.cc/playgo/goban.html?sgf=$sgf$' } }),
-        set: async () => {}
+        set: async () => { }
       }
     },
     tabs: {
@@ -108,6 +108,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   link.target = '_blank';
   link.textContent = 'GitHub';
   status.appendChild(link);
+
+  const separator = document.createTextNode(' \u2013');
+  status.appendChild(separator);
+
+  const coffeeLink = document.createElement('a');
+  coffeeLink.href = 'https://ko-fi.com/hemme';
+  coffeeLink.target = '_blank';
+  coffeeLink.className = 'coffee-link';
+  coffeeLink.title = 'Buy me a coffee';
+  coffeeLink.setAttribute('aria-label', 'Buy me a coffee');
+  coffeeLink.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8H6c0 0 0 7 6 7s6-7 6-7Z" /><path d="M18 10h1a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-1" /><path d="M4 18h16" /><path d="M9 5c0-1.5 1-1.5 1-3" stroke-width="1.5" /><path d="M14 5c0-1.5 1-1.5 1-3" stroke-width="1.5" /><path class="coffee-heart" d="M12 13c-.3-.3-1.8-1.6-1.8-2.6 0-.7.5-1.2 1.2-1.2.4 0 .7.2.8.4.1-.2.4-.4.8-.4.7 0 1.2.5 1.2 1.2 0 1-1.5 2.3-1.8 2.6Z" fill="#ff4b5c" stroke="none" /></svg>`;
+  status.appendChild(coffeeLink);
 
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
