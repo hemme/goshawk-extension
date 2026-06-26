@@ -289,7 +289,7 @@ function reset() {
     coord_signs = [0, 0]
     guessed_board = []
     set_sgf_form('')
-    Q('#copy_to_clipboard').disabled = Q('#download').disabled = true
+    Q('#copy_to_clipboard').disabled = Q('#download').disabled = Q('#preview_btn').disabled = true
     reset_perspective_corners()
     draw(0, 0)
 }
@@ -690,7 +690,7 @@ function update_sgf(silent, temporary) {
     }
     
     set_sgf_form(output_text)
-    Q('#copy_to_clipboard').disabled = Q('#download').disabled = false
+    Q('#copy_to_clipboard').disabled = Q('#download').disabled = Q('#preview_btn').disabled = false
     
     if (format === 'hen') {
         update_hen_link(output_text)

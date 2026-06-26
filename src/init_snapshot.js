@@ -73,6 +73,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     setupViewerButtons();
+    setupPreviewButton();
 
     chrome.storage.onChanged.addListener((changes, areaName) => {
       if (areaName === 'local' && changes.goshawk_options) {
@@ -159,4 +160,63 @@ function setupViewerButtons() {
       window.open(url, '_blank');
     }
   });
+}
+
+function setupPreviewButton() {
+  const previewBtn = document.getElementById('preview_btn');
+  const modal = document.getElementById('preview_modal');
+  if (!previewBtn || !modal) return;
+
+  previewBtn.addEventListener('click', () => {
+    if (previewBtn.disabled) return;
+    const sgf = typeof get_sgf === 'function' ? get_sgf() : '';
+    const hen = window.Hen ? Hen.sgf2hen(sgf) : '';
+    if (!hen) {
+      openPreviewModal(null, 'No position to preview.');
+      return;
+    }
+    const url = `https://wrk.GoShawk.cc/cx/hen${encodeURIComponent(hen)}.gif`;
+    openPreviewModal(url);
+  });
+
+  modal.querySelectorAll('[data-preview-close]').forEach(el => {
+    el.addEventListener('click', closePreviewModal);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) closePreviewModal();
+  });
+}
+
+function openPreviewModal(url, message) {
+  const modal = document.getElementById('preview_modal');
+  const img = document.getElementById('preview_img');
+  const msg = document.getElementById('preview_msg');
+  if (!modal || !img || !msg) return;
+
+  if (url) {
+    img.onload = () => { img.hidden = false; msg.textContent = ''; };
+    img.onerror = () => { img.hidden = true; msg.textContent = 'Image not available.'; };
+    msg.textContent = 'Loading...';
+    img.hidden = true;
+    img.src = url;
+    if (img.complete && img.naturalWidth > 0) { img.hidden = false; msg.textContent = ''; }
+  } else {
+    img.onload = null;
+    img.onerror = null;
+    img.removeAttribute('src');
+    img.hidden = true;
+    msg.textContent = message || '';
+  }
+  modal.hidden = false;
+}
+
+function closePreviewModal() {
+  const modal = document.getElementById('preview_modal');
+  if (!modal) return;
+  modal.hidden = true;
+  const img = document.getElementById('preview_img');
+  const msg = document.getElementById('preview_msg');
+  if (img) { img.onload = null; img.onerror = null; img.removeAttribute('src'); img.hidden = true; }
+  if (msg) msg.textContent = '';
 }

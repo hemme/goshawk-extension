@@ -200,6 +200,72 @@
       color: var(--fg);
     }
 
+    .preview-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-modal[hidden] {
+      display: none;
+    }
+
+    .preview-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .preview-modal-card {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      max-width: 90vw;
+      max-height: 90vh;
+      box-sizing: border-box;
+    }
+
+    .preview-modal-card img {
+      display: block;
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+
+    .preview-modal-card img[hidden] {
+      display: none;
+    }
+
+    .preview-close-btn {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 4px;
+    }
+
+    .preview-close-btn:hover {
+      color: var(--accent);
+    }
+
+    .preview-msg {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
     textarea {
       font-family: monospace;
       font-size: 12px;
@@ -492,6 +558,13 @@
         <!-- Controls & Options Divider -->
         <div
           style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px; gap: 10px; flex-wrap: wrap;">
+          <button id="preview_btn" class="icon-btn export-button" title="Preview" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
           <button id="reset">Reset</button>
 
           <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
@@ -614,5 +687,14 @@
     </div> <!-- right_column -->
 
   </div> <!-- main -->
+
+  <div id="preview_modal" class="preview-modal" hidden>
+    <div class="preview-modal-backdrop" data-preview-close></div>
+    <div class="preview-modal-card">
+      <button id="preview_close" class="preview-close-btn" title="Close" data-preview-close>&times;</button>
+      <img id="preview_img" alt="HEN position preview" />
+      <div id="preview_msg" class="preview-msg"></div>
+    </div>
+  </div>
 
 </body>
