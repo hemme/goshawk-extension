@@ -200,6 +200,58 @@
       color: var(--fg);
     }
 
+    .icon-btn.labeled {
+      width: auto;
+      height: 30px;
+      padding: 0 8px;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .icon-btn.labeled svg {
+      flex-shrink: 0;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .segmented label {
+      position: relative;
+      cursor: pointer;
+      display: inline-flex;
+    }
+
+    .segmented input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segmented span {
+      display: inline-block;
+      padding: 4px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      border-radius: 6px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .segmented input:checked + span {
+      background: var(--accent);
+      color: #fff;
+    }
+
     .preview-modal {
       position: fixed;
       inset: 0;
@@ -492,38 +544,52 @@
             placeholder="Paste images here by right-click. Drag/drop or Ctrl-V also work anywhere."></textarea>
           <br />
         <div
-          style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; margin-bottom: 15px;">
+          style="display: flex; flex-direction: column; align-items: stretch; gap: 8px; margin-top: 8px; margin-bottom: 15px;">
           <div style="font-size: 13px; display: flex; gap: 10px; align-items: center; color: var(--fg);">
             <span>Format:</span>
-            <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
-              <input type="radio" name="copy_format" value="sgf" checked
-                style="width: auto; accent-color: var(--accent);"> SGF
-            </label>
-            <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
-              <input type="radio" name="copy_format" value="hen" style="width: auto; accent-color: var(--accent);"> HEN
-            </label>
+            <div class="segmented">
+              <label>
+                <input type="radio" name="copy_format" value="sgf" checked>
+                <span>SGF</span>
+              </label>
+              <label>
+                <input type="radio" name="copy_format" value="hen">
+                <span>HEN</span>
+              </label>
+            </div>
           </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <button id="open_viewer" class="icon-btn export-button" title="Open in viewer" disabled>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <button id="preview_btn" class="icon-btn labeled export-button" title="Preview" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Preview
+            </button>
+            <button id="open_viewer" class="icon-btn labeled export-button" title="Open in viewer" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <line x1="10" y1="14" x2="21" y2="3"></line>
               </svg>
+              Viewer
             </button>
-            <button id="copy_to_clipboard" class="icon-btn export-button" title="Copy to clipboard">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <button id="copy_to_clipboard" class="icon-btn labeled export-button" title="Copy to clipboard">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
+              Copy
             </button>
-            <button id="download" class="icon-btn export-button" title="Download">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <button id="download" class="icon-btn labeled export-button" title="Download">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 3v13m-5-5 5 5 5-5M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/>
             </svg>
+              Download
             </button>
           </div>
         </div>
@@ -558,24 +624,16 @@
         <!-- Controls & Options Divider -->
         <div
           style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px; gap: 10px; flex-wrap: wrap;">
-          <button id="preview_btn" class="icon-btn export-button" title="Preview" disabled>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
           <button id="reset">Reset</button>
 
-          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
-            <div>
-              Output:
-              <select name="sgf_size" id="sgf_size_select">
-                <option value="-1">as is (19x19)</option>
-              </select>
-            </div>
+          <div
+            style="display: grid; grid-template-columns: auto auto; gap: 6px 14px; align-items: center; font-size: 13px;">
+            <label for="sgf_size_select" style="color: var(--muted);">Output</label>
+            <select name="sgf_size" id="sgf_size_select">
+              <option value="-1">as is (19x19)</option>
+            </select>
             <div id="align_h_container" style="display: none;">
-              Align H:
+              <label for="align_h_select" style="color: var(--muted);">Align H</label>
               <select name="align_h" id="align_h_select">
                 <option value="left">Left</option>
                 <option value="center" selected>Center</option>
@@ -583,19 +641,23 @@
               </select>
             </div>
             <div id="align_v_container" style="display: none;">
-              Align V:
+              <label for="align_v_select" style="color: var(--muted);">Align V</label>
               <select name="align_v" id="align_v_select">
                 <option value="top">Top</option>
                 <option value="center" selected>Center</option>
                 <option value="bottom">Bottom</option>
               </select>
             </div>
-            <div>
-              To play:
-              <input type="radio" name="to_play" id="black_to_play" value="B">
-              <label for="black_to_play">black</label>
-              <input type="radio" name="to_play" id="white_to_play" value="W">
-              <label for="white_to_play">white</label>
+            <span style="color: var(--muted);">To play</span>
+            <div class="segmented">
+              <label>
+                <input type="radio" name="to_play" id="black_to_play" value="B" checked>
+                <span>● Black</span>
+              </label>
+              <label>
+                <input type="radio" name="to_play" id="white_to_play" value="W">
+                <span>○ White</span>
+              </label>
             </div>
           </div>
         </div>
@@ -616,7 +678,8 @@
 
       <p>
         <button id="toggle_tuning" style="margin-right: 3em;">parameter tuning...</button>
-        <span style="color: lightgray; font-size: 0.85em; display: inline-block; margin-top: 5px;">
+        <span id="debug_readout"
+          style="color: lightgray; font-size: 0.85em; display: none; margin-top: 5px;">
           <span id="debug_xy"></span>
           <span id="debug_color">　</span>
           <span id="debug_rgba"></span>

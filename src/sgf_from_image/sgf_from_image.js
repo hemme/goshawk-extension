@@ -151,6 +151,7 @@ function update_tuning() {
 function update_tuning_internally() {
     show_if(is_tuning, '#tuning')
     show_if(!is_tuning, '#toggle_tuning')
+    show_if(is_tuning, '#debug_readout')
     is_tuning && scroll_to_bottom()
 }
 
